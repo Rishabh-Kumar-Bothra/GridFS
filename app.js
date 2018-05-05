@@ -23,7 +23,7 @@ const conn = mongoose.createConnection(mongoURI);
 
 let gfs;
 conn.once('open', ()=> {
-     gfs = Grid(conn.db, mongoose.mongo);
+    gfs = Grid(conn.db, mongoose.mongo);
     gfs.collection('uploads');
 })
 
@@ -37,14 +37,14 @@ const storage = new GridFsStorage({
                     return reject(err);
                 }
                 const filename = buf.toString('hex') + path.extname(file.originalname);
-            const fileInfo = {
-                filename: filename,
-                bucketName: 'uploads'
-            };
-            resolve(fileInfo);
+                const fileInfo = {
+                    filename: filename,
+                    bucketName: 'uploads'
+                };
+                resolve(fileInfo);
+            });
         });
-    });
-}
+    }
 });
 const upload = multer({ storage });
 
@@ -52,7 +52,7 @@ app.get('/',(req,res)=>{
 
     gfs.files.find().toArray((err,files)=>{
         if(!files || files.length === 0){
-             res.render('index',{files:false})
+            res.render('index',{files:false})
         }
         else{
             files.map(file =>{
@@ -70,7 +70,7 @@ app.get('/',(req,res)=>{
 
 app.post('/upload',upload.single('file'),(req,res)=>{
 
-   // res.json({file : req.file})
+    // res.json({file : req.file})
     res.redirect('/')
 })
 
@@ -118,16 +118,16 @@ app.get('/image/:filename',(req,res)=>{
 })
 
 
-app.delete('files/:id',(req,res)=>{
-    gfs.remove({_id:req.params.id,root:'uploads'},(err,gridStore)=>{
-        if(err){
-            return res.status(404).json({err:err})
+app.delete('/files/:id', (req, res) => {
+    gfs.remove({ _id: req.params.id, root: 'uploads' }, (err, gridStore) => {
+        if (err) {
+            return res.status(404).json({ err: err });
         }
-        res.redirect('/')
-    })
-})
 
+        res.redirect('/');
+    });
+});
 
-app.listen(5000,()=>{
+app.listen(5050,()=>{
     console.log('server started')
 });
